@@ -1,0 +1,53 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 0,
+  "modules-left": [
+    "hyprland/workspaces",
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "tray",
+    "network",
+    "cpu",
+    "memory",
+    "pulseaudio",
+  ],
+  "hyprland/workspaces": {
+    "active-only": false,
+    "all-outputs": true,
+    "disable-scroll": true,
+    "format": "{name}",
+    "on-click": "activate",
+    "show-special": true,
+    "sort-by-number": true
+  },
+  "cpu": {
+    "interval": 1,
+    "format": "󰾆 {usage}",
+    "tooltip": true,
+  },
+  "memory": {
+    "interval": 1,
+    "format": "󰍛 {used}"
+  },
+  "clock": {
+    "interval": 60,
+    "format": "{:%H:%M}",
+  },
+  "network": {
+    "interval": 1,
+    "format-ethernet": "{ipaddr} : {bandwidthTotalBytes}",
+    "format-linked": "{ifname} (No IP) ",
+    "format-disconnected": "! Disconnected",
+    "tooltip-format-wifi": "{signalStrength}% | ⬇ {bandwidthDownBits} ⬆ {bandwidthUpBits} | {ipaddr}/{cidr}",
+  },
+  "pulseaudio": {
+      "format": "󰕾 {volume}",
+      "format-muted": "󰖁 sssh..",
+      "on-click": "pavucontrol",
+      "scroll-step": 1,
+  }
+}
