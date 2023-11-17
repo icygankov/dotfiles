@@ -1,8 +1,3 @@
--- IMPORTANT: make sure to setup neodev BEFORE lspconfig
-require("neodev").setup({
-  -- add any options here, or leave empty to use the default settings
-})
-
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(client, bufnr)
@@ -28,6 +23,8 @@ require('mason-lspconfig').setup({
         "lua_ls",
         "pyright",
         "rust_analyzer",
+        "texlab",
+        "tsserver"
     },
     handlers = {
         lsp_zero.default_setup,

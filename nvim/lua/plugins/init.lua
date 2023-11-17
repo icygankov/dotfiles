@@ -10,37 +10,34 @@ return {
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
     { "catppuccin/nvim",                  name = "catppuccin", priority = 1000 },
-    { "nvim-treesitter/nvim-treesitter" },
+    {
+        -- Highlight, edit, and navigate code
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+        },
+        build = ':TSUpdate',
+    },
     { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
+    -- Useful status updates for LSP
+    -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+    { 'j-hui/fidget.nvim',                opts = {} },
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
     { 'L3MON4D3/LuaSnip' },
+    { 'saadparwaiz1/cmp_luasnip' },
+    { 'rafamadriz/friendly-snippets' },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
     { 'simrat39/rust-tools.nvim' },
-    { "folke/neodev.nvim",                opts = {} },
     'nvim-lualine/lualine.nvim',
-    {
-        'windwp/nvim-autopairs',
-        event = "InsertEnter",
-        opts = {} -- this is equalent to setup({}) function
-    },
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        init = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 300
-        end,
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-        }
-    },
-    {
-        'stevearc/dressing.nvim',
-        opts = {},
-    }
+    { 'stevearc/dressing.nvim', opts = {}, },
+    { 'lervag/vimtex' },
+    { 'tpope/vim-fugitive' },
+    -- Detect tabstop and shiftwidth automatically
+    'tpope/vim-sleuth',
+    -- "gc" to comment visual regions/lines
+    { 'numToStr/Comment.nvim', opts = {}, lazy = false, },
+     'christoomey/vim-tmux-navigator'
 }
