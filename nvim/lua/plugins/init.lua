@@ -19,7 +19,7 @@ return {
             },
         },
     },
-    { "catppuccin/nvim",             name = "catppuccin", priority = 1000 },
+    { "catppuccin/nvim",           name = "catppuccin", priority = 1000 },
     {
         -- Highlight, edit, and navigate code
         'nvim-treesitter/nvim-treesitter',
@@ -28,22 +28,22 @@ return {
         },
         build = ':TSUpdate',
     },
-    { 'VonHeikemen/lsp-zero.nvim',   branch = 'v3.x' },
+    { 'VonHeikemen/lsp-zero.nvim', branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
-    -- Useful status updates for LSP
-    -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-    { 'j-hui/fidget.nvim',           opts = {} },
+    { 'j-hui/fidget.nvim',         opts = {} },
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
-    { 'L3MON4D3/LuaSnip' },
+    {
+        "L3MON4D3/LuaSnip",
+        dependencies = { "rafamadriz/friendly-snippets" },
+    },
     { 'saadparwaiz1/cmp_luasnip' },
-    { 'rafamadriz/friendly-snippets' },
     'folke/neodev.nvim',
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
     { 'simrat39/rust-tools.nvim' },
-    'nvim-lualine/lualine.nvim',
-    { 'stevearc/dressing.nvim', opts = {}, },
+    { 'nvim-lualine/lualine.nvim',        opts = {}, },
+    { 'stevearc/dressing.nvim',           opts = {}, },
     { 'lervag/vimtex' },
     { 'tpope/vim-fugitive' },
     -- Detect tabstop and shiftwidth automatically
@@ -51,5 +51,10 @@ return {
     -- "gc" to comment visual regions/lines
     { 'numToStr/Comment.nvim',               opts = {},    lazy = false, },
     'christoomey/vim-tmux-navigator',
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} }
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        opts = {} -- this is equalent to setup({}) function
+    }
 }
