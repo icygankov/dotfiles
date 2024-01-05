@@ -16,11 +16,6 @@ state_connected = "good"
 state_disconnected = "warning"
 
 [[block]]
-block = "external_ip"
-interval = 5
-format = " $ip $country_code"
-
-[[block]]
 block = "cpu"
 interval = 1
 format = " $icon $barchart $utilization "

@@ -1,24 +1,42 @@
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(client, bufnr)
-    local opts = { buffer = bufnr, remap = false }
+    local nmap = function(keys, func, desc)
+        if desc then
+            desc = 'LSP: ' .. desc
+        end
 
-    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-    vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+    end
 
-    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-    vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
 
-    vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("n", "<F2>", function() vim.lsp.buf.rename() end, opts)
+    nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+    nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+    nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+    nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-    vim.keymap.set("n", "<F3>", function() vim.lsp.buf.format({ async = false, timeout_ms = 10000 }) end, opts)
-    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+    -- See `:help K` for why this keymap
+    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+    -- Lesser used LSP functionality
+    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    nmap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
+
+    nmap('<F3>', vim.lsp.buf.format, 'Format code')
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
 end)
 
 require('mason').setup({})
@@ -88,7 +106,44 @@ local rust_tools = require('rust-tools')
 rust_tools.setup({
     server = {
         on_attach = function(client, bufnr)
-            vim.keymap.set('n', '<leader>ca', rust_tools.hover_actions.hover_actions, { buffer = bufnr })
+            -- vim.keymap.set('n', '<leader>ca', rust_tools.hover_actions.hover_actions, { buffer = bufnr })
         end
     }
+})
+
+vim.g.haskell_tools = {
+    hls = {
+        capabilities = lsp_zero.get_capabilities()
+    }
+}
+
+-- Autocmd that will actually be in charging of starting hls
+local hls_augroup = vim.api.nvim_create_augroup('haskell-lsp', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+    group = hls_augroup,
+    pattern = { 'haskell' },
+    callback = function()
+        ---
+        -- Suggested keymaps from the quick setup section:
+        -- https://github.com/mrcjkb/haskell-tools.nvim#quick-setup
+        ---
+
+        local ht = require('haskell-tools')
+        local bufnr = vim.api.nvim_get_current_buf()
+        local def_opts = { noremap = true, silent = true, buffer = bufnr, }
+        -- haskell-language-server relies heavily on codeLenses,
+        -- so auto-refresh (see advanced configuration) is enabled by default
+        vim.keymap.set('n', '<space>ca', vim.lsp.codelens.run, def_opts)
+        -- Hoogle search for the type signature of the definition under the cursor
+        vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, def_opts)
+        -- Evaluate all code snippets
+        vim.keymap.set('n', '<space>ea', ht.lsp.buf_eval_all, def_opts)
+        -- Toggle a GHCi repl for the current package
+        vim.keymap.set('n', '<leader>rr', ht.repl.toggle, def_opts)
+        -- Toggle a GHCi repl for the current buffer
+        vim.keymap.set('n', '<leader>rf', function()
+            ht.repl.toggle(vim.api.nvim_buf_get_name(0))
+        end, opts)
+        vim.keymap.set('n', '<leader>rq', ht.repl.quit, def_opts)
+    end
 })

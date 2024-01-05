@@ -49,4 +49,9 @@ return {
         opts = {} -- this is equalent to setup({}) function
     },
     { 'mhartington/formatter.nvim',          opts = {} },
+    {
+        'mrcjkb/haskell-tools.nvim',
+        version = '^3', -- Recommended
+        ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
+    },
 }
