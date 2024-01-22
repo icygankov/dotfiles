@@ -1,7 +1,8 @@
-vim.opt.nu = true
+vim.wo.number = true
 vim.opt.relativenumber = true
 
-vim.opt.clipboard = 'unnamedplus'
+vim.o.clipboard = 'unnamedplus'
+vim.o.breakindent = true
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -26,7 +27,8 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
-vim.opt.updatetime = 50
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
 vim.opt.colorcolumn = "100"
 
 vim.opt.completeopt = 'menuone,noselect'
@@ -42,5 +44,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })

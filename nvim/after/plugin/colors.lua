@@ -51,4 +51,3 @@ vim.cmd.colorscheme "catppuccin"
 -- just highlight current line number
 vim.cmd.highlight('CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE')
 vim.cmd.set('cursorline')
-
