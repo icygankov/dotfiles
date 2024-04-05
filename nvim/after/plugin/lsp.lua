@@ -15,6 +15,33 @@ lsp_zero.on_attach(function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+  -- Highlight word under cursor
+  vim.cmd([[
+      hi! link LspReferenceRead Visual
+      hi! link LspReferenceText Visual
+      hi! link LspReferenceWrite Visual
+    ]])
+
+  local gid = vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+  vim.api.nvim_create_autocmd("CursorHold", {
+    group = gid,
+    buffer = bufnr,
+    callback = function()
+      if vim.lsp.buf.document_highlight ~= nil then
+        -- vim.lsp.buf.document_highlight()
+      end
+    end
+  })
+
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    group = gid,
+    buffer = bufnr,
+    callback = function()
+      vim.lsp.buf.clear_references()
+    end
+  })
+
+
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
@@ -44,63 +71,106 @@ lsp_zero.on_attach(function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end)
 
+local cmp_lsp = require("cmp_nvim_lsp")
+local capabilities = vim.tbl_deep_extend(
+  "force",
+  {},
+  vim.lsp.protocol.make_client_capabilities(),
+  cmp_lsp.default_capabilities())
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = {},
+  ensure_installed = { "typst_lsp" },
   handlers         = {
     lsp_zero.default_setup,
+    ["lua_ls"] = function()
+      local lspconfig = require("lspconfig")
+      lspconfig.lua_ls.setup {
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim", "it", "describe", "before_each", "after_each" },
+            }
+          }
+        }
+      }
+    end,
   }
 })
+
+-- require('lspconfig').typst_lsp.setup({
+--   filetypes = { 'typ', "typst" },
+--   settings = {
+--     exportPdf = "onType" -- Choose onType, onSave or never.
+--     -- serverPath = "" -- Normally, there is no need to uncomment it.
+--   }
+-- })
+
+
 
 -- Setup neovim lua configuration
 require('neodev').setup()
 
-
-
 local cmp = require('cmp')
+local cmp_select = { behavior = cmp.SelectBehavior.Select }
 local cmp_action = require('lsp-zero').cmp_action()
-require('luasnip.loaders.from_vscode').lazy_load()
+local lspkind = require('lspkind')
 
 cmp.setup({
-  sources = {
-    { name = 'path' },
-    { name = 'nvim_lsp' },
-    { name = 'nvim_lua' },
-    { name = 'luasnip' },
-    { name = 'buffer'  },
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+    end,
   },
-  preselect = 'item',
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'path' },
+    { name = 'buffer',  keyword_length = 2 },
+  },
   completion = {
-    completeopt = 'menu,menuone,noinsert'
+    keyword_length = 1,
+    completeopt = "menu,noselect",
+  },
+  view = {
+    entries = "custom",
   },
   mapping = cmp.mapping.preset.insert({
-    -- `Enter` key to confirm completion
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
-
-    -- Ctrl+Space to trigger completion menu
     ['<C-Space>'] = cmp.mapping.complete(),
-
-    -- Navigate between snippet placeholder
     ['<C-f>'] = cmp_action.luasnip_jump_forward(),
     ['<C-b>'] = cmp_action.luasnip_jump_backward(),
-
-    -- Scroll up and down in the completion documentation
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
-
-    ['<Tab>'] = cmp_action.luasnip_supertab(),
-    ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
+    ["<Tab>"] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end,
+    ["<S-Tab>"] = function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end,
   }),
   formatting = {
-    fields = { 'abbr', 'kind', 'menu' },
-    format = require('lspkind').cmp_format({
-      mode = 'symbol',       -- show only symbol annotations
-      maxwidth = 50,         -- prevent the popup from showing more than provided characters
-      ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead
-    })
+    format = lspkind.cmp_format {
+      mode = "symbol_text",
+      menu = {
+        nvim_lsp = "[LSP]",
+        ultisnips = "[US]",
+        nvim_lua = "[Lua]",
+        path = "[Path]",
+        buffer = "[Buffer]",
+        emoji = "[Emoji]",
+        omni = "[Omni]",
+      },
+    },
   },
-  -- completion = {
-  --   autocomplete = false
-  -- },
+
 })

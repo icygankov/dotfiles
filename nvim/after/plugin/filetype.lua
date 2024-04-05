@@ -1,0 +1,8 @@
+-- In init.lua or filetype.nvim's config file
+-- require("filetype").setup({
+--   overrides = {
+--     extensions = {
+--       typ = "typ",
+--     },
+--   },
+-- })

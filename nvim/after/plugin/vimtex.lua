@@ -1,5 +1,11 @@
 vim.g.vimtex_view_method = 'zathura'
-vim.g.vimtex_view_general_viewer = 'zathura'
-vim.g.tex_comment_nospell = 1
-vim.g.vimtex_view_general_options = [[--unique file:@pdf\#src:@line@tex]]
-vim.g.vimtex_view_general_options_latexmk = '--unique'
+vim.g.vimtex_syntax_enabled = 1
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "tex",
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = {"de_de", "en_us"}
+  end,
+})
+
