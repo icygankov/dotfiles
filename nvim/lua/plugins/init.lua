@@ -13,7 +13,18 @@ return {
             },
         },
     },
-    { "catppuccin/nvim",                  name = "catppuccin", priority = 1000 },
+    { "catppuccin/nvim",          name = "catppuccin", priority = 1000 },
+    -- {
+    --     'maxmx03/solarized.nvim',
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         vim.o.background = 'dark' -- or 'light'
+    --
+    --         vim.cmd.colorscheme 'solarized'
+    --     end,
+    -- },
+    { 'lifepillar/vim-solarized8', lazy=false, branch = "neovim" },
     {
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
@@ -50,15 +61,15 @@ return {
     'folke/neodev.nvim',
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
-    { 'nvim-lualine/lualine.nvim',        opts = {}, },
-    { 'stevearc/dressing.nvim',           opts = {}, },
+    { 'nvim-lualine/lualine.nvim',           opts = {}, },
+    { 'stevearc/dressing.nvim',              opts = {}, },
     { 'lervag/vimtex' },
     { 'tpope/vim-fugitive' },
     { 'tpope/vim-sleuth' },
-    { 'numToStr/Comment.nvim',            opts = {},           lazy = false, },
-    { 'folke/which-key.nvim',             opts = {} },
-    'christoomey/vim-tmux-navigator',
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl",   opts = {} },
+    { 'numToStr/Comment.nvim',               opts = {},    lazy = false, },
+    { 'folke/which-key.nvim',                opts = {} },
+    { 'christoomey/vim-tmux-navigator' },
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
@@ -79,11 +90,10 @@ return {
             { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
         },
     },
-
-    { 'VonHeikemen/lsp-zero.nvim',           branch = 'v3.x' },
+    { 'VonHeikemen/lsp-zero.nvim', branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
     { 'L3MON4D3/LuaSnip' },
-    -- { 'nathom/filetype.nvim' },
+    { 'akinsho/toggleterm.nvim' }
 }

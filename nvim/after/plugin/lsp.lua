@@ -80,7 +80,7 @@ local capabilities = vim.tbl_deep_extend(
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = { "typst_lsp" },
+  ensure_installed = { "rust_analyzer", "jsonls", "cmake", "pyright" },
   handlers         = {
     lsp_zero.default_setup,
     ["lua_ls"] = function()
@@ -98,16 +98,6 @@ require('mason-lspconfig').setup({
     end,
   }
 })
-
--- require('lspconfig').typst_lsp.setup({
---   filetypes = { 'typ', "typst" },
---   settings = {
---     exportPdf = "onType" -- Choose onType, onSave or never.
---     -- serverPath = "" -- Normally, there is no need to uncomment it.
---   }
--- })
-
-
 
 -- Setup neovim lua configuration
 require('neodev').setup()

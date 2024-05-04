@@ -20,9 +20,9 @@
 ;;
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
-(setq doom-font (font-spec :family "Iosevka Nerd Font" :size 17))
-(setq doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 16))
-(setq doom-symbol-font  (font-spec :family "Iosevka Nerd Font"))
+(setq doom-font (font-spec :family "IosevkaTerm Nerd Font" :size 17))
+(setq doom-variable-pitch-font (font-spec :family "IosevkaTerm Nerd Font" :size 16))
+(setq doom-symbol-font  (font-spec :family "IosevkaTerm Nerd Font"))
 ;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 ;;
@@ -34,8 +34,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'catppuccin)
-(setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha
+(setq doom-theme 'doom-solarized-dark-high-contrast)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -90,8 +89,19 @@
           "--header-insertion=never"
           "--header-insertion-decorators=0"))
   (set-lsp-priority! 'clangd 2))
-(after! catpuccin-theme (catppuccin-reload))
-
 
 (map! "<f3>" #'+format/buffer)
 (add-hook 'after-init-hook #'global-tree-sitter-mode)
+
+;; Fish (and possibly other non-POSIX shells) is known to inject garbage
+;; output into some of the child processes that Emacs spawns. Many Emacs
+;; packages/utilities will choke on this output, causing unpredictable
+;; issues. To get around this, either:
+;;
+;;  - Add the following to $DOOMDIR/config.el:
+(setq shell-file-name (executable-find "bash"))
+
+;; If you opt for option 1 and use one of Emacs' terminal emulators, you
+;; will also need to configure them to use Fish, e.g.
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
