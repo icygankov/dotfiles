@@ -80,7 +80,7 @@ local capabilities = vim.tbl_deep_extend(
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = { "rust_analyzer", "jsonls", "cmake", "pyright" },
+  ensure_installed = { "rust_analyzer", "jsonls", "cmake", "ruff", "html" },
   handlers         = {
     lsp_zero.default_setup,
     ["lua_ls"] = function()
